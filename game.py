@@ -70,6 +70,26 @@ def is_collision(enemy_x, enemy_y, bullet_x, bullet_y):
         return True
     return False
 
+# Constants for levels
+LEVELS = [
+    {"enemy_speed": 2, "num_enemies": 5, "player_health": 100, "score_threshold": 5},
+    {"enemy_speed": 3, "num_enemies": 7, "player_health": 90, "score_threshold": 10},
+]
+current_level = 0
+
+# Game loop
+running = True
+while running:
+    # ... (existing game loop code) ...
+
+    # Check for advancing to the next level
+    if score >= LEVELS[current_level]["score_threshold"]:
+        current_level += 1
+        if current_level < len(LEVELS):
+            enemy_speed = LEVELS[current_level]["enemy_speed"]
+            enemy_x = random.randint(0, WIDTH - ENEMY_SIZE)
+            enemy_y = random.randint(50, 150)
+
 # Game loop
 running = True
 while running:
