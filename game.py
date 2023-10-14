@@ -26,10 +26,11 @@ pygame.display.set_caption("Space Invaders")
 # Load images
 player_img = pygame.image.load("player.png")
 enemy_img = pygame.image.load("enemy.png")
+bullet_img = pygame.image.load("bullet.png")
 
 # Set up player
 player_x = WIDTH // 2 - PLAYER_SIZE // 2
-player_y = HEIGHT - 2 * PLAYER_SIZE
+player_y = HEIGHT  - 3 * PLAYER_SIZE
 player_x_change = 0
 
 # Set up enemy
@@ -40,8 +41,8 @@ enemy_y = random.randint(50, 150)
 bullet_x = 0
 bullet_y = HEIGHT - PLAYER_SIZE
 bullet_x_change = 0
-bullet_y_change = -BULLET_SPEED
-bullet_state = "ready"  # "ready" means the bullet is ready to fire
+bullet_y_change = BULLET_SPEED
+bullet_state = 1  # 1 means the bullet is ready to fire
 
 # Score
 score = 0
@@ -60,7 +61,7 @@ def enemy(x, y):
 
 def fire_bullet(x, y):
     global bullet_state
-    bullet_state = "fire"
+    bullet_state = 0 
     screen.blit(bullet_img, (x + PLAYER_SIZE // 2 - BULLET_SIZE // 2, y - BULLET_SIZE))
 
 def is_collision(enemy_x, enemy_y, bullet_x, bullet_y):
@@ -83,8 +84,8 @@ while running:
             if event.key == pygame.K_RIGHT:
                 player_x_change = PLAYER_SPEED
             if event.key == pygame.K_SPACE:
-                if bullet_state == "ready":
-                    bullet_sound = pygame.mixer.Sound("laser.wav")
+                if bullet_state == 1:
+                    bullet_sound = pygame.mixer.Sound("laser.ogg")
                     bullet_sound.play()
                     bullet_x = player_x
                     fire_bullet(bullet_x, bullet_y)
@@ -117,21 +118,21 @@ while running:
         enemy_y += ENEMY_SIZE
 
     # Bullet movement
-    if bullet_state == "fire":
+    if bullet_state == 2:
         fire_bullet(bullet_x, bullet_y)
         bullet_y += bullet_y_change
 
     # Bullet reset
     if bullet_y <= 0:
         bullet_y = HEIGHT - PLAYER_SIZE
-        bullet_state = "ready"
+        bullet_state = 1
 
     # Collision
     if is_collision(enemy_x, enemy_y, bullet_x, bullet_y):
-        explosion_sound = pygame.mixer.Sound("explosion.wav")
+        explosion_sound = pygame.mixer.Sound("explosion.ogg")
         explosion_sound.play()
         bullet_y = HEIGHT - PLAYER_SIZE
-        bullet_state = "ready"
+        bullet_state = 1
         score += 1
         enemy_x = random.randint(0, WIDTH - ENEMY_SIZE)
         enemy_y = random.randint(50, 150)
