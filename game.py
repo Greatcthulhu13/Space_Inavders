@@ -98,9 +98,13 @@ while running:
                 player_x_change = PLAYER_SPEED
             if event.key == pygame.K_SPACE:
                 if bullet_state == "ready":
-                    bullet_sound.play()
-                    bullet_x = player_x
-                    fire_bullet(bullet_x, bullet_y)
+                    try:
+                        bullet_sound.play()
+                        bullet_x = player_x
+                        fire_bullet(bullet_x, bullet_y)
+                        bullet_state = "fire"
+                    except Exception as e:
+                        print("Error when firing bullet:", e)
 
         # Check for key releases
         if event.type == pygame.KEYUP:
