@@ -63,10 +63,10 @@ LEVELS = [
 current_level = 0
 
 def player(x, y):
-    screen.blit(player_img, (x, y)
+    screen.blit(player_img, (x, y))
 
 def enemy(x, y):
-    screen.blit(enemy_img, (x, y)
+    screen.blit(enemy_img, (x, y))
 
 def fire_bullet(x, y):
     global bullet_state
