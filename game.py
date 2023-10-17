@@ -55,6 +55,10 @@ font = pygame.font.Font(None, 36)
 bullet_sound = pygame.mixer.Sound("laser.ogg")
 explosion_sound = pygame.mixer.Sound("explosion.ogg")
 
+# Initialize game over text
+game_over_font = pygame.font.Font(None, 72)
+game_over_text = game_over_font.render("Game Over", True, RED)
+
 # Constants for levels
 LEVELS = [
     {"enemy_speed": 2, "num_enemies": 5, "score_threshold": 5},
