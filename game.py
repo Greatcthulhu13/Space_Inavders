@@ -13,6 +13,7 @@ ENEMY_SIZE = 50
 BULLET_SIZE = 10
 BULLET_SPEED = 10
 PLAYER_HEALTH = 100
+clock = pygame.time.Clock()
 
 # Colors
 WHITE = (255, 255, 255)
@@ -86,6 +87,7 @@ def is_collision(enemy_x, enemy_y, bullet_x, bullet_y):
 # Game loop
 running = True
 while running:
+    clock.tick(300)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -96,15 +98,11 @@ while running:
                 player_x_change = -PLAYER_SPEED
             if event.key == pygame.K_RIGHT:
                 player_x_change = PLAYER_SPEED
-            if event.key == pygame.K_SPACE:
-                if bullet_state == "ready":
-                    try:
-                        bullet_sound.play()
-                        bullet_x = player_x
-                        fire_bullet(bullet_x, bullet_y)
-                        bullet_state = "fire"
-                    except Exception as e:
-                        print("Error when firing bullet:", e)
+            if event.key == pygame.K_SPACE and bullet_state == "ready":
+                    bullet_sound.play()
+                    bullet_x = player_x
+                    fire_bullet(bullet_x, bullet_y)
+                    bullet_state = "fire"
 
         # Check for key releases
         if event.type == pygame.KEYUP:
