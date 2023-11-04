@@ -39,13 +39,17 @@ bullets = []
 bullet_speed = BULLET_SPEED
 
 # Enemies
-enemies = []
-for _ in range(ENEMY_COUNT):
+enemies = pygame.sprite.Group()  # Use a sprite group for enemies
+
+def create_enemy():
     enemy = pygame.image.load("enemy.png")
     enemy = pygame.transform.scale(enemy, (ENEMY_SIZE, ENEMY_SIZE))
     enemy_x = random.randint(0, WIDTH - ENEMY_SIZE)
     enemy_y = random.randint(50, 200)
-    enemies.append([enemy, enemy_x, enemy_y])
+    enemies.add(enemy, x=enemy_x, y=enemy_y)
+
+for _ in range(ENEMY_COUNT):
+    create_enemy()
 
 # Game Loop
 running = True
@@ -66,14 +70,14 @@ while running:
         player_x += PLAYER_SPEED
 
     for enemy in enemies:
-        screen.blit(enemy[0], (enemy[1], enemy[2]))
-        enemy[2] += ENEMY_SPEED
+        screen.blit(enemy.image, enemy.rect.topleft)
+        enemy.rect.y += ENEMY_SPEED
 
-        if enemy[2] > HEIGHT:
-            enemy[1] = random.randint(0, WIDTH - ENEMY_SIZE)
-            enemy[2] = random.randint(50, 200)
+        if enemy.rect.y > HEIGHT:
+            enemy.rect.x = random.randint(0, WIDTH - ENEMY_SIZE)
+            enemy.rect.y = random.randint(50, 200)
 
-        if player_x < enemy[1] + ENEMY_SIZE and player_x + PLAYER_SIZE > enemy[1] and player_y < enemy[2] + ENEMY_SIZE and player_y + PLAYER_SIZE > enemy[2]:
+        if player.colliderect(enemy.rect):
             running = False
 
     for bullet in bullets:
@@ -83,22 +87,16 @@ while running:
         if bullet.y < 0:
             bullets.remove(bullet)
 
-        for enemy in enemies:
-            if bullet.colliderect(enemy[1], enemy[2], ENEMY_SIZE, ENEMY_SIZE):
-                bullets.remove(bullet)
-                enemy[1] = random.randint(0, WIDTH - ENEMY_SIZE)
-                enemy[2] = random.randint(50, 200)
-                score += 1
-                explosion_sound.play()  # Play explosion sound
+        if pygame.sprite.spritecollide(bullet, enemies, True):
+            bullets.remove(bullet)
+            create_enemy()  # Create a new enemy
+            score += 1
+            explosion_sound.play()  # Play explosion sound
 
     if len(enemies) == 0:
         ENEMY_COUNT += 1
         for _ in range(ENEMY_COUNT):
-            enemy = pygame.image.load("enemy.png")
-            enemy = pygame.transform.scale(enemy, (ENEMY_SIZE, ENEMY_SIZE))
-            enemy_x = random.randint(0, WIDTH - ENEMY_SIZE)
-            enemy_y = random.randint(50, 200)
-            enemies.append([enemy, enemy_x, enemy_y])
+            create_enemy()
 
     if keys[pygame.K_SPACE]:
         if len(bullets) < 3:
@@ -112,4 +110,3 @@ while running:
     pygame.display.update()
 
 pygame.quit()
-
