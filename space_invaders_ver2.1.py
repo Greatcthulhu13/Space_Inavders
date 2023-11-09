@@ -13,11 +13,11 @@ explosion_sound = pygame.mixer.Sound("explosion.ogg")
 laser_sound = pygame.mixer.Sound("laser.ogg")
 
 # Constants
-WIDTH, HEIGHT = 900, 700
+WIDTH, HEIGHT = 1000, 800
 PLAYER_SIZE = 100
-ENEMY_SIZE = 30
+ENEMY_SIZE = 35
 PLAYER_SPEED = 5
-ENEMY_SPEED = 3
+ENEMY_SPEED = 1
 BULLET_SPEED = 5
 ENEMY_COUNT = 5
 clock = pygame.time.Clock()
@@ -61,69 +61,80 @@ for _ in range(ENEMY_COUNT):
 
 # Game Loop
 running = True
+game_over = False  # New variable to track game over state
 score = 0
 font = pygame.font.Font(None, 36)
 
-
 while running:
-    screen.fill(BLACK)
-    clock.tick(300)
+    if game_over:
+        screen.fill(BLACK)
+        game_over_text = font.render("Game Over", True, WHITE)
+        score_text = font.render(f"Score: {score}", True, WHITE)
+        screen.blit(game_over_text, (WIDTH // 2 - 100, HEIGHT // 2 - 50))
+        screen.blit(score_text, (WIDTH // 2 - 60, HEIGHT // 2))
+        pygame.display.update()
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+    else:
+        screen.fill(BLACK)
+        clock.tick(300)
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and player_x > 0:
-        player_x -= PLAYER_SPEED
-    if keys[pygame.K_RIGHT] and player_x < WIDTH - PLAYER_SIZE:
-        player_x += PLAYER_SPEED
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-    for enemy in enemies:
-        screen.blit(enemy.image, enemy.rect.topleft)
-        enemy.rect.y += ENEMY_SPEED
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and player_x > 0:
+            player_x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT] and player_x < WIDTH - PLAYER_SIZE:
+            player_x += PLAYER_SPEED
 
-        if enemy.rect.y > HEIGHT:
-            enemy.rect.x = random.randint(0, WIDTH - ENEMY_SIZE)
-            enemy.rect.y = random.randint(50, 200)
+        for enemy in enemies:
+            screen.blit(enemy.image, enemy.rect.topleft)
+            enemy.rect.y += ENEMY_SPEED
 
-        if player.get_rect().colliderect(enemy.rect):
-            running = False
+            if enemy.rect.y > HEIGHT:
+                enemy.rect.x = random.randint(0, WIDTH - ENEMY_SIZE)
+                enemy.rect.y = random.randint(50, 200)
 
-    for bullet in bullets:
-        pygame.draw.rect(screen, WHITE, bullet)
-        bullet.y -= bullet_speed
+            if player.get_rect().colliderect(enemy.rect):
+                game_over = True  # Set game over state
 
-        if bullet.y < 0:
-            bullets.remove(bullet)
+        for bullet in bullets:
+            pygame.draw.rect(screen, WHITE, bullet)
+            bullet.y -= bullet_speed
 
-        # Create a sprite for the bullet
-        bullet_sprite = pygame.sprite.Sprite()
-        bullet_sprite.rect = bullet
+            if bullet.y < 0:
+                bullets.remove(bullet)
 
-        # Detect collisions without removing
-        collided_enemies = pygame.sprite.spritecollide(bullet_sprite, enemies, False)
-        if collided_enemies:
-            for enemy in collided_enemies:
-                enemies.remove(enemy)
-                score += 1
-                explosion_sound.play()  # Play explosion sound
+            # Create a sprite for the bullet
+            bullet_sprite = pygame.sprite.Sprite()
+            bullet_sprite.rect = bullet
 
+            # Detect collisions without removing
+            collided_enemies = pygame.sprite.spritecollide(bullet_sprite, enemies, False)
+            if collided_enemies:
+                for enemy in collided_enemies:
+                    enemies.remove(enemy)
+                    score += 1
+                    explosion_sound.play()  # Play explosion sound
 
-    if len(enemies) == 0:
-        ENEMY_COUNT += 1
-        for _ in range(ENEMY_COUNT):
-            create_enemy()
+        if len(enemies) == 0:
+            ENEMY_COUNT += 1
+            for _ in range(ENEMY_COUNT):
+                create_enemy()
 
-    if keys[pygame.K_SPACE]:
-        if len(bullets) < 3:
-            bullets.append(pygame.Rect(player_x + PLAYER_SIZE // 2 - 2, player_y, 4, 10))
-            laser_sound.play()  # Play laser sound
+        if keys[pygame.K_SPACE]:
+            if len(bullets) < 3:
+                bullets.append(pygame.Rect(player_x + PLAYER_SIZE // 2 - 2, player_y, 4, 10))
+                laser_sound.play()  # Play laser sound
 
-    text = font.render(f"Score: {score}", True, WHITE)
-    screen.blit(text, (10, 10))
-    screen.blit(player, (player_x, player_y))
+        text = font.render(f"Score: {score}", True, WHITE)
+        screen.blit(text, (10, 10))
+        screen.blit(player, (player_x, player_y))
 
-    pygame.display.update()
+        pygame.display.update()
 
 pygame.quit()
