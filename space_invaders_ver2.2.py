@@ -15,9 +15,9 @@ laser_sound = pygame.mixer.Sound("laser.ogg")
 # Constants
 WIDTH, HEIGHT = 1000, 800
 PLAYER_SIZE = 100
-ENEMY_SIZE = 35
+ENEMY_SIZE = 65
 PLAYER_SPEED = 5
-ENEMY_SPEED = 1
+ENEMY_SPEED = 1.5
 BULLET_SPEED = 5
 ENEMY_COUNT = 5
 clock = pygame.time.Clock()
