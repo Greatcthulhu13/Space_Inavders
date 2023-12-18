@@ -8,6 +8,12 @@ pygame.init()
 # Initialize Pygame mixer
 pygame.mixer.init()
 
+# Load background music
+pygame.mixer.music.load("main_theme.ogg")
+
+# Start playing background music (set -1 for endless loop)
+pygame.mixer.music.play(-1)
+
 # Load audio files
 explosion_sound = pygame.mixer.Sound("explosion.ogg")
 laser_sound = pygame.mixer.Sound("laser.ogg")
@@ -137,4 +143,5 @@ while running:
 
         pygame.display.update()
 
+pygame.mixer.music.stop()  # Stop background music when the game is over or when you exit the game
 pygame.quit()
