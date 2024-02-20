@@ -8,11 +8,13 @@ pygame.init()
 # Initialize Pygame mixer
 pygame.mixer.init()
 
-# Load background music
-pygame.mixer.music.load("main_theme.ogg")
+# Load background music for the main menu
+menu_music = pygame.mixer.Sound("menu_theme.ogg")
+menu_music.set_volume(0.5)  # Adjust volume as needed
 
-# Start playing background music (set -1 for endless loop)
-pygame.mixer.music.play(-1)
+# Load background music for the game
+game_music = pygame.mixer.Sound("game_theme.ogg")
+game_music.set_volume(0.5)  # Adjust volume as needed
 
 # Load audio files
 explosion_sound = pygame.mixer.Sound("explosion.ogg")
@@ -61,6 +63,30 @@ def create_enemy():
     enemy_sprite.rect.x = enemy_x
     enemy_sprite.rect.y = enemy_y
     enemies.add(enemy_sprite)
+
+def main_menu():
+    menu_music.play(-1)  # Start playing menu music in a loop
+    while True:
+        screen.fill(BLACK)
+        font = pygame.font.Font(None, 36)
+        title_text = font.render("Space Invaders", True, WHITE)
+        start_text = font.render("Press SPACE to Start", True, WHITE)
+        screen.blit(title_text, (WIDTH // 2 - 100, HEIGHT // 2 - 50))
+        screen.blit(start_text, (WIDTH // 2 - 120, HEIGHT // 2))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    menu_music.stop()  # Stop menu music
+                    return
+
+main_menu()
+
+game_music.play(-1)  # Start playing game music in a loop
 
 for _ in range(ENEMY_COUNT):
     create_enemy()
@@ -143,5 +169,4 @@ while running:
 
         pygame.display.update()
 
-pygame.mixer.music.stop()  # Stop background music when the game is over or when you exit the game
 pygame.quit()
