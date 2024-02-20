@@ -64,8 +64,41 @@ def create_enemy():
     enemy_sprite.rect.y = enemy_y
     enemies.add(enemy_sprite)
 
+def load_leaderboard():
+    try:
+        with open("leaderboard.txt", "r") as file:
+            leaderboard = [line.strip() for line in file]
+            leaderboard = [int(score) for score in leaderboard]
+            leaderboard.sort(reverse=True)
+            return leaderboard
+    except FileNotFoundError:
+        return []
+
+def save_leaderboard(leaderboard):
+    with open("leaderboard.txt", "w") as file:
+        for score in leaderboard:
+            file.write(str(score) + "\n")
+
+def update_leaderboard(score, leaderboard):
+    leaderboard.append(score)
+    leaderboard.sort(reverse=True)
+    leaderboard = leaderboard[:5]  # Keep only the top 5 scores
+    save_leaderboard(leaderboard)
+    return leaderboard
+
+def draw_leaderboard(leaderboard):
+    font = pygame.font.Font(None, 36)
+    leaderboard_title = font.render("Leaderboard", True, WHITE)
+    screen.blit(leaderboard_title, (10, 10))
+    y_offset = 50
+    for i, score in enumerate(leaderboard, start=1):
+        score_text = font.render(f"{i}. {score}", True, WHITE)
+        screen.blit(score_text, (10, y_offset))
+        y_offset += 30
+
 def main_menu():
     menu_music.play(-1)  # Start playing menu music in a loop
+    leaderboard = load_leaderboard()
     while True:
         screen.fill(BLACK)
         font = pygame.font.Font(None, 36)
@@ -73,6 +106,7 @@ def main_menu():
         start_text = font.render("Press SPACE to Start", True, WHITE)
         screen.blit(title_text, (WIDTH // 2 - 100, HEIGHT // 2 - 50))
         screen.blit(start_text, (WIDTH // 2 - 120, HEIGHT // 2))
+        draw_leaderboard(leaderboard)
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -106,6 +140,7 @@ while running:
         screen.blit(score_text, (WIDTH // 2 - 60, HEIGHT // 2))
         pygame.display.update()
 
+        leaderboard = update_leaderboard(score, leaderboard)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
