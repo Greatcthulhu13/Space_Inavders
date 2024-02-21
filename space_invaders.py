@@ -13,7 +13,7 @@ menu_music = pygame.mixer.Sound("menu_theme.ogg")
 menu_music.set_volume(0.5)  # Adjust volume as needed
 
 # Load background music for the game
-game_music = pygame.mixer.Sound("game_theme.ogg")
+game_music = pygame.mixer.Sound("Dot_Matrix.wav")
 game_music.set_volume(0.5)  # Adjust volume as needed
 
 # Load audio files
@@ -24,8 +24,8 @@ laser_sound = pygame.mixer.Sound("laser.ogg")
 WIDTH, HEIGHT = 1000, 800
 PLAYER_SIZE = 100
 ENEMY_SIZE = 65
-PLAYER_SPEED = 5
-ENEMY_SPEED = 1.5
+PLAYER_SPEED = 1
+ENEMY_SPEED = 1
 BULLET_SPEED = 5
 ENEMY_COUNT = 5
 clock = pygame.time.Clock()
@@ -67,7 +67,7 @@ def create_enemy():
 def load_leaderboard():
     try:
         with open("leaderboard.txt", "r") as file:
-            leaderboard = [line.strip() for line in file]
+            leaderboard = [line.strip() for line in file if line.strip()]
             leaderboard = [int(score) for score in leaderboard]
             leaderboard.sort(reverse=True)
             return leaderboard
