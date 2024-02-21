@@ -13,7 +13,7 @@ menu_music = pygame.mixer.Sound("menu_theme.ogg")
 menu_music.set_volume(0.5)  # Adjust volume as needed
 
 # Load background music for the game
-game_music = pygame.mixer.Sound("Dot_Matrix.wav")
+game_music = pygame.mixer.Sound("game_theme.ogg")
 game_music.set_volume(0.5)  # Adjust volume as needed
 
 # Load audio files
