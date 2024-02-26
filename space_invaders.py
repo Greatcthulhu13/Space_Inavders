@@ -14,7 +14,7 @@ menu_music.set_volume(0.5)  # Adjust volume as needed
 
 # Load background music for the game
 game_music = pygame.mixer.Sound("fighting_aliens.ogg")
-game_music.set_volume(0.5)  # Adjust volume as needed
+game_music.set_volume(1)  # Adjust volume as needed
 
 # Load audio files
 explosion_sound = pygame.mixer.Sound("explosion.ogg")
@@ -50,6 +50,9 @@ bullet_speed = BULLET_SPEED
 
 # Enemies
 enemies = pygame.sprite.Group()  # Use a sprite group for enemies
+
+# Initialize leaderboard as a global variable
+leaderboard = []
 
 def create_enemy():
     enemy = pygame.image.load("enemy.png")
@@ -98,6 +101,7 @@ def draw_leaderboard(leaderboard):
 
 def main_menu():
     menu_music.play(-1)  # Start playing menu music in a loop
+    global leaderboard  # Declare leaderboard as a global variable
     leaderboard = load_leaderboard()
     while True:
         screen.fill(BLACK)
