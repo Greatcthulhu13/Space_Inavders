@@ -36,7 +36,7 @@ BLACK = (0, 0, 0)
 
 # Create the screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Space Invaders")
+pygame.display.set_caption("Space Invasion")
 
 # Player
 player = pygame.image.load("player.png")
@@ -106,7 +106,7 @@ def main_menu():
     while True:
         screen.fill(BLACK)
         font = pygame.font.Font(None, 36)
-        title_text = font.render("Space Invaders", True, WHITE)
+        title_text = font.render("Space Invasion", True, WHITE)
         start_text = font.render("Press SPACE to Start", True, WHITE)
         screen.blit(title_text, (WIDTH // 2 - 100, HEIGHT // 2 - 50))
         screen.blit(start_text, (WIDTH // 2 - 120, HEIGHT // 2))
